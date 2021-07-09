@@ -1,13 +1,18 @@
-const Express = require('express');
-const App = Express();
+const connectDB = require('./startup/db');
+const express = require('express');
+const app = express();
 const cors = require('cors');
+const collections = require('./routes/collections');
+
+connectDB();
 
 
-App.use(express.json());
-App.use(cors());
+app.use(express.json());
+app.use(cors());
+app.use('/api/collections', collections);
 
 const port = process.env.PORT|| 5000;
-App.listen(port, () => {
+app.listen(port, () => {
     console.log(`Server started on port: ${port}`);
 });
 

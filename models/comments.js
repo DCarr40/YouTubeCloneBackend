@@ -1,16 +1,17 @@
 const mongoose = require('mongoose');
 const Joi = require('joi');
 const { date } = require('joi');
+const {replySchema} = require('./reply');
 
 
 const commentSchema = mongoose.Schema({
 
-    text: { type: string, required: true, minlength: 5, maxlength:1000 },
-    like: { type: number, required: true, default:0 },
-    dislike: { type: number, required: true, default:0 },
-    reply: [{ type: replySchema }],
-    videoId: { type: string, required: true},
-    dateAdded: { type: date, default: Date.now },
+    text: { type: String, required: true, minlength: 5, maxlength:1000 },
+    like: { type: Number, required: true, default:0 },
+    dislike: { type: Number, required: true, default:0 },
+    reply: { type: [replySchema] },
+    videoId: { type: String, required: true},
+    dateAdded: { type: Date, default: Date.now },
 
 })
 
