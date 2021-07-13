@@ -2,7 +2,6 @@ const { Comment, validateComment } = require('../models/comments');
 const { Reply, validateReply } = require('../models/reply');
 const express = require('express');
 const router = express.Router();
-const Joi = require('joi');
 
 router.get('/', async (req, res) => {
     try {

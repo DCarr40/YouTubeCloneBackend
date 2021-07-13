@@ -17,5 +17,8 @@ function validateReply(reply) {
     return Schema.validate(reply);
 }
 
-module.exports = Reply;
-module.exports = validateReply;
+
+module.exports = {
+    Reply: Reply,
+    validateReply: validateReply
+}

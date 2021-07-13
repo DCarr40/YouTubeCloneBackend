@@ -24,5 +24,9 @@ function validateComment(comment) {
     });
     return Schema.validate(comment);
 }
-module.exports = Comment;
-module.exports = validateComment;
+
+
+module.exports = {
+    Comment: Comment,
+    validateComment: validateComment
+}
