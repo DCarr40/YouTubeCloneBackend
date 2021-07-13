@@ -1,7 +1,8 @@
-const Comment = require('../models/comments');
-const Reply = require('../models/reply');
+const { Comment, validateComment } = require('../models/comments');
+const { Reply, validateReply } = require('../models/reply');
 const express = require('express');
 const router = express.Router();
+const Joi = require('joi');
 
 router.get('/', async (req, res) => {
     try {
@@ -12,12 +13,25 @@ router.get('/', async (req, res) => {
     }
 });
 
+router.get('/:videoId', async (req, res) => {
+    try {
+        const comments = await Comment.find();
+        return res.send(comments);
+    } catch (ex) {
+        return res.status(500).send(`Internal Server Error: ${ex}`);
+    }
+});
+
+
+
 router.post('/', async (req, res) => {
     try {
+        const { error } = validateComment(req.body);
+        if (error)
+            return res.status(400).send(error);
+        //TODO: Validation!
         const comment = new Comment({
             text: req.body.text,
-            likes: req.body.likes,
-            dislikes: req.body.dislikes,
             videoId: req.body.videoId,
         });
 
@@ -31,6 +45,10 @@ router.post('/', async (req, res) => {
 
 router.post('/:commentId/reply', async (req, res) => {
     try{
+        const { error } = validateReply(req.body);
+        if (error)
+            return res.status(400).send(error);
+        //TODO: Validation!
         const comment = await Comment.findById(req.params.commentId);
         if(!comment) return res.status(400).send(`The comment with id "${req.params.commentId} does not exit.`);
 
@@ -49,9 +67,32 @@ router.post('/:commentId/reply', async (req, res) => {
     }
 })
 
+router.put('/like/:commentId', async (req,res) => {
+    try{
+        const comment = await Comment.findById(req.params.commentId)
+        comment.like = comment.like + 1
+        await comment.save()
+        return res.status(200).send(comment)
+
+    } catch(err){
+        return res.status(500).send(`Internal Server Error: ${err}`);
+    }
+
+})
 
 
+router.put('/dislike/:commentId', async (req,res) => {
+    try{
+        const comment = await Comment.findById(req.params.commentId)
+        comment.dislike = comment.dislike + 1
+        await comment.save()
+        return res.status(200).send(comment)
 
+    } catch(err){
+        return res.status(500).send(`Internal Server Error: ${err}`);
+    }
+
+})
 
 
 
